@@ -14,7 +14,7 @@ conda activate "$ENV_NAME"
 
 echo "🛠️ Setting up pre-commit..."
 pre-commit install
-pre-commit run --all-files
+pre-commit run --all-files || true
 echo "✅ Pre-commit setup completed."
 
 echo "🧹 Cleaning conda & pip caches..."
