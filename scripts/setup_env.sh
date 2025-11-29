@@ -1,17 +1,23 @@
 set -e
 
-ENV_NAME="${1}"
-
 eval "$(conda shell.bash hook)"
 
-echo "🚀 Creating environment: $ENV_NAME ..."
-conda env create -f env.yaml -n "$ENV_NAME" -y
-echo "✅ Environment '$ENV_NAME' created."
+echo "🚀 Creating environment from env.yaml ..."
+conda env create -f env.yaml -y
+echo "✅ Environment created."
 
-echo "🔧 Activating environment..."
+# Extract env name from env.yaml
+ENV_NAME=$(grep -E '^name:' env.yaml | awk '{print $2}')
+
+echo "🔧 Activating environment: $ENV_NAME ..."
 conda activate "$ENV_NAME"
 
-echo "🛠️  Setting up pre-commit..."
+echo "🛠️ Setting up pre-commit..."
 pre-commit install
 pre-commit run --all-files
 echo "✅ Pre-commit setup completed."
+
+echo "🧹 Cleaning conda & pip caches..."
+conda clean -a -y
+pip cache purge
+echo "✨ Cleanup done."
