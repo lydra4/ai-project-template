@@ -2,8 +2,13 @@ set -e
 
 eval "$(conda shell.bash hook)"
 
-echo "🚀 Creating environment from env.yaml ..."
-conda env create -f env.yaml -y
+if ! command -v mamba &> /dev/null; then
+    echo "⚡ Installing mamba into base environment..."
+    conda install -n base -c conda-forge mamba -y
+fi
+
+echo "🚀 Creating environment from env.yaml using mamba..."
+mamba env create -f env.yaml -y
 echo "✅ Environment created."
 
 # Extract env name from env.yaml
