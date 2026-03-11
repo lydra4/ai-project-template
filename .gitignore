@@ -15,8 +15,8 @@
 !**/models/**/
 !**/data/**/
 
-# Allow .txt files inside any data folder
-!**/data/**/*.txt
+# Allow .gitkeep files so the directory structure can be committed
+!**/data/**/.gitkeep
 
 # Ignore outputs from OmegaConf/Hydra
 **/outputs/
