@@ -5,3 +5,4 @@ pylint
 
 # Pre-commit Hooks
 pre-commit
+mypy
