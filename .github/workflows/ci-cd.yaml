@@ -45,7 +45,7 @@ jobs:
         run: pre-commit run --all-files
 
       - name: Run mypy
-        run: mypy src 
+        run: mypy src
 
   build-and-push:
     name: Docker Build & Push
