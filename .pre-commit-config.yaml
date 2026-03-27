@@ -18,7 +18,7 @@ repos:
     hooks:
       - id: mypy
         files: \.py$
-        additional_dependencies:
+        additional_dependencies: []
         args:
           - "--config-file=.github/workflows/mypy.ini"
           - "--namespace-packages"
