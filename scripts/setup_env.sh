@@ -23,6 +23,7 @@ pre-commit run --all-files || true
 echo "✅ Pre-commit setup completed."
 
 echo "🧹 Cleaning conda & pip caches..."
-conda clean -a -y
+mamba clean -a -y
+conda clean --force-pkgs-dirs -y
 pip cache purge
 echo "✨ Cleanup done."
