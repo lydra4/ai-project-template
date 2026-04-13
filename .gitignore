@@ -6,9 +6,9 @@
 **/conf/**/*credentials*
 
 # Ignore everything in the following folders
-**/logs/**
-**/models/**
-**/data/**
+/logs/**
+/models/**
+/data/**
 
 # Except their sub-folders (structure, but not files inside)
 !**/logs/**/
