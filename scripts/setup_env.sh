@@ -24,6 +24,7 @@ echo "✅ Pre-commit setup completed."
 
 echo "🧹 Cleaning conda & pip caches..."
 mamba clean -a -y
-conda clean --force-pkgs-dirs -y
+conda clean --index-cache -y || true
 pip cache purge
+pre-commit clean
 echo "✨ Cleanup done."
