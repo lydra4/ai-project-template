@@ -20,7 +20,9 @@ FROM python:3.12.10-slim-bookworm
 
 ARG NON_ROOT_USER="template"
 ARG NON_ROOT_UID="2222"
+ARG NON_ROOT_GID="2222"
 ARG HOME_DIR="/home/${NON_ROOT_USER}"
+ARG REPO_DIR="."
 
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
@@ -32,7 +34,7 @@ RUN useradd -l -m -s /bin/bash -u ${NON_ROOT_UID} ${NON_ROOT_USER}
 
 COPY --from=builder /opt/venv /opt/venv
 
-ENV PATH="/home/template/.local/bin:${PATH}"
+ENV PATH="/opt/venv/bin:/home/template/.local/bin:${PATH}"
 ENV PYTHONIOENCODING=utf8
 ENV PYTHONPATH="${HOME_DIR}"
 
