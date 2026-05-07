@@ -1,10 +1,12 @@
 import logging
+import logging.config
 import os
 from os import PathLike
 
 import yaml
 
 logger = logging.getLogger(__name__)
+
 
 def setup_logging(
     logging_config_path: str | PathLike = "./config/logging.yaml",
