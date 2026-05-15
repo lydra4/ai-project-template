@@ -2,9 +2,7 @@ name: AI Project CI/CD # Change name
 
 on:
   push:
-    branches: [main]
   pull_request:
-    branches: [main]
   workflow_dispatch: {}
 
 env:
