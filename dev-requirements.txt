@@ -6,3 +6,6 @@ pylint
 # Pre-commit Hooks
 pre-commit
 mypy
+
+# Security
+bandit
