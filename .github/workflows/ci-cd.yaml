@@ -38,7 +38,7 @@ jobs:
           pip install -r dev-requirements.txt -r prod-requirements.txt
 
       - name: Run Ruff
-        run: ruff check src
+        run: ruff check src tests
 
       - name: Run mypy
         run: mypy --config-file .github/workflows/mypy.ini src
