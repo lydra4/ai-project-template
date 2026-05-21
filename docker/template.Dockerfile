@@ -44,3 +44,5 @@ WORKDIR ${HOME_DIR}
 COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} .
 
 ENTRYPOINT ["python3"]
+
+CMD ["src/app.py"]
