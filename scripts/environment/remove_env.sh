@@ -1,63 +1,78 @@
-set -e
+#!/usr/bin/env bash
 
-if [ ! -f "env.yaml" ]; then
-    echo "❌ Error: env.yaml not found in the current directory."
+set -euo pipefail
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd -- "$SCRIPT_DIR/../.." && pwd)"
+ENV_FILE="$PROJECT_ROOT/env.yaml"
+
+if ! command -v conda >/dev/null 2>&1; then
+    echo "❌ Error: conda is not installed or not available in PATH."
     exit 1
 fi
 
-ENV_NAME=$(grep -E '^name:' env.yaml | awk '{print $2}')
+if [ ! -f "$ENV_FILE" ]; then
+    echo "❌ Error: env.yaml not found at: $ENV_FILE"
+    exit 1
+fi
+
+ENV_NAME="$(
+    awk '
+        /^[[:space:]]*name[[:space:]]*:/ {
+            sub(/^[^:]*:[[:space:]]*/, "")
+            sub(/[[:space:]]*#.*/, "")
+            gsub(/[[:space:]]/, "")
+            print
+            exit
+        }
+    ' "$ENV_FILE"
+)"
 
 if [ -z "$ENV_NAME" ]; then
-    echo "❌ Error: Could not find a name in env.yaml."
+    echo "❌ Error: env.yaml does not define an environment name."
     exit 1
 fi
 
-OS_TYPE="unknown"
-case "$(uname -s)" in
-    Linux*|Darwin*)
-        OS_TYPE="unix"
-        ;;
-    CYGWIN*|MINGW*|MSYS*)
-        OS_TYPE="windows"
-        ;;
-esac
+if [ "$ENV_NAME" = "base" ]; then
+    echo "❌ Error: refusing to remove the base Conda environment."
+    exit 1
+fi
 
-echo "☢️  Starting total destruction of environment: $ENV_NAME ..."
+ENV_PATH="$(
+    conda info --envs |
+        awk -v env="$ENV_NAME" '$1 == env { print $NF; exit }'
+)"
 
-ENV_PATH=$(conda info --envs | grep -w "$ENV_NAME" | awk '{print $NF}')
+if [ -z "$ENV_PATH" ]; then
+    echo "ℹ️ Conda environment '$ENV_NAME' does not exist."
+    exit 0
+fi
 
+echo "Removing Conda environment: $ENV_NAME"
+echo "Environment path: $ENV_PATH"
+
+# Conda shell functions can reference unset variables.
+set +u
+eval "$(conda shell.bash hook)"
 conda deactivate 2>/dev/null || true
+set -u
 
-echo "🔫 Killing any zombie Python or Ruff processes..."
-if [ "$OS_TYPE" = "windows" ]; then
-    taskkill //F //IM python.exe //T 2>/dev/null || true
-    taskkill //F //IM ruff.exe //T 2>/dev/null || true
+if conda env remove -n "$ENV_NAME" -y; then
+    echo "✅ Conda environment '$ENV_NAME' was removed."
 else
-    pkill -9 python 2>/dev/null || true
-    pkill -9 ruff 2>/dev/null || true
+    echo "❌ Conda could not remove '$ENV_NAME'."
+    echo "Close processes using this environment and try again."
+    exit 1
 fi
 
-echo "📦 Running conda remove..."
-conda remove -n "$ENV_NAME" --all -y --force || true
-
-if [ -n "$ENV_PATH" ] && [ -d "$ENV_PATH" ]; then
-    echo "📂 Forcefully removing directory: $ENV_PATH"
-    rm -rf "$ENV_PATH"
-
-    if [ -d "$ENV_PATH" ]; then
-        echo "❌ Folder still exists! Attempting native fallback delete..."
-
-        if [ "$OS_TYPE" = "windows" ]; then
-            powershell.exe -Command "Remove-Item -Recurse -Force -ErrorAction SilentlyContinue '$ENV_PATH'" 2>/dev/null || true
-        else
-            echo "⚠️ Could not delete $ENV_PATH. You may need manual intervention (e.g., 'sudo rm -rf $ENV_PATH')."
-        fi
-    fi
-else
-    echo "ℹ️  Environment folder already gone or not found."
+if [ -d "$ENV_PATH" ]; then
+    echo "⚠️ The environment directory still exists:"
+    echo "   $ENV_PATH"
+    echo "It was not deleted automatically for safety."
+    exit 1
 fi
 
-echo "🧹 Cleaning global index caches..."
-conda clean -i -y
+echo "Cleaning Conda index caches..."
+conda clean --index-cache -y
 
-echo "✨ Environment '$ENV_NAME' has been scrubbed."
+echo "✨ Environment '$ENV_NAME' was removed successfully."
