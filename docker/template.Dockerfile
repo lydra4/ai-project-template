@@ -1,4 +1,4 @@
-FROM python:3.12.10-slim-bookworm AS builder
+FROM python:3.13-slim-bookworm AS builder
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
@@ -44,5 +44,3 @@ WORKDIR ${HOME_DIR}
 COPY --chown=${NON_ROOT_USER}:${NON_ROOT_GID} ${REPO_DIR} .
 
 ENTRYPOINT ["python3"]
-
-CMD ["src/app.py"]
