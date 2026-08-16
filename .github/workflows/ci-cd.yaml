@@ -61,6 +61,7 @@ jobs:
       contents: read
       packages: write
       security-events: write
+      actions: read
 
     steps:
       - name: Checkout repository
@@ -104,7 +105,7 @@ jobs:
           output: "trivy-results.sarif"
           exit-code: "1"
           ignore-unfixed: true
-          vuln-type: "os,library"
+          vuln-type: "library"
           severity: "CRITICAL,HIGH"
           limit-severities-for-sarif: true
 
