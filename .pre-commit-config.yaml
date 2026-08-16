@@ -1,20 +1,20 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: # fill later
+    rev: v0.16.3
     hooks:
       - id: ruff
         files: \.py$
         args: [--fix]
 
   - repo: https://github.com/pycqa/isort
-    rev: # fill later
+    rev: 8.0.1
     hooks:
       - id: isort
         args: ["--profile", "black"]
         files: \.py$
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: # fill later
+    rev: v2.3.1
     hooks:
       - id: mypy
         files: \.py$
@@ -24,13 +24,13 @@ repos:
           - "--namespace-packages"
 
   - repo: https://github.com/psf/black
-    rev: # fill later
+    rev: 26.5.1
     hooks:
       - id: black
         files: \.py$
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: # fill later
+    rev: v6.0.0
     hooks:
       - id: check-yaml
       - id: check-json
