@@ -10,3 +10,6 @@ mypy
 
 # Security
 bandit
+
+# Unit Test
+pytest
