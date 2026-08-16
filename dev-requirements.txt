@@ -1,15 +1,15 @@
 # Code Formatting and Linting
-black
-ruff
-pylint
-isort
+black==26.5.1
+ruff==0.16.3
+pylint==4.0.7
+isort==8.0.1
 
 # Pre-commit Hooks
-pre-commit
-mypy
+pre-commit==4.6.2
+mypy==2.3.1
 
 # Security
-bandit
+bandit==1.9.4
 
 # Unit Test
-pytest
+pytest==9.1.1
