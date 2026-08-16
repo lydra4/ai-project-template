@@ -1,3 +1,17 @@
+# Ignore version control and CI
+.git
+.github
+.gitignore
+
+# Ignore anything the runtime image does not need
+notebooks
+tests
+scripts
+env.yaml
+dev-requirements.txt
+.pre-commit-config.yaml
+.claude
+
 # Ignore all local configuration
 conf/local/**
 !conf/local/.gitkeep
@@ -9,8 +23,6 @@ conf/**/*credentials*
 data
 logs
 models
-aisg-context/k8s/pvc
-aisg-context/k8s/secrets
 
 # Ignore .deb packages
 *.deb
