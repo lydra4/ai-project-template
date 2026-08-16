@@ -18,10 +18,10 @@ def setup_logging(
             log_config = yaml.safe_load(file.read())
         logging.config.dictConfig(log_config)
 
-    except Exception as error:
+    except (FileNotFoundError, yaml.YAMLError) as error:
         logging.basicConfig(
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             level=default_level,
         )
         logger.info(error)
-        logger.info("Logging config file is not found. Basic config is used.")
+        logger.info("Logging config invalid or missing. Basic config is used.")
