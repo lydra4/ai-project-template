@@ -101,19 +101,11 @@ jobs:
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: "local-test-image:latest"
-          format: "sarif"
-          output: "trivy-results.sarif"
+          format: "table"
           exit-code: "1"
           ignore-unfixed: true
           vuln-type: "library"
           severity: "CRITICAL,HIGH"
-          limit-severities-for-sarif: true
-
-      - name: Upload Trivy results to GitHub Security
-        if: always()
-        uses: github/codeql-action/upload-sarif@ff2f1c621b7f889edc0d3c761ac2e6a3f8cdb0dd # v4.37.7
-        with:
-          sarif_file: "trivy-results.sarif"
 
       - name: Push Docker Image
         if: github.event_name != 'pull_request'
