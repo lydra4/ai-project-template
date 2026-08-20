@@ -41,13 +41,13 @@ jobs:
         run: black --check src tests
 
       - name: run isort import order check
-        run: isort --check-only --profile black src tests
+        run: isort --check-only src tests
 
       - name: Run Ruff
         run: ruff check src tests
 
       - name: Run mypy
-        run: mypy --config-file .github/workflows/mypy.ini src
+        run: mypy src
 
       - name: Run Bandit (Code Security Scan)
         run: bandit -r src/ -ll -ii
