@@ -52,6 +52,9 @@ jobs:
       - name: Run Bandit (Code Security Scan)
         run: bandit -r src/ -ll -ii
 
+      - name: Run pytest
+        run: pytest -q --cov=src --cov-report=term-missing --cov-report=xml
+
   build-test-push:
     name: Docker Build, Scan & Push
     runs-on: ubuntu-latest
