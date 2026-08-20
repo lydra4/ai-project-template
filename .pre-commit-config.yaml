@@ -10,7 +10,6 @@ repos:
     rev: 8.0.1
     hooks:
       - id: isort
-        args: ["--profile", "black"]
         files: \.py$
 
   - repo: https://github.com/pre-commit/mirrors-mypy
@@ -18,10 +17,7 @@ repos:
     hooks:
       - id: mypy
         files: \.py$
-        additional_dependencies: [types-PyYAML]
-        args:
-          - "--config-file=.github/workflows/mypy.ini"
-          - "--namespace-packages"
+        additional_dependencies: [types-PyYAML==6.0.12.20260815]
 
   - repo: https://github.com/psf/black
     rev: 26.5.1
