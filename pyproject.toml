@@ -16,6 +16,7 @@ profile = "black"
 python_version = "3.13" # Depends on python version
 explicit_package_bases = true
 disallow_untyped_defs = true
+mypy_path = "src"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
