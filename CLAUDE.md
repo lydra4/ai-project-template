@@ -32,7 +32,6 @@ CI (`.github/workflows/ci-cd.yaml`) runs these on every push/PR — run them loc
 
 ```bash
 black --check src tests
-isort --check-only src tests
 ruff check src tests
 mypy src
 bandit -r src/ -ll -ii
@@ -42,7 +41,7 @@ pytest -q --cov=src --cov-report=term-missing
 ## Conventions
 
 - All functions must have type annotations (`mypy` runs with `disallow_untyped_defs = true`).
-- Formatting is black + isort (black profile); linting is ruff (`E, F, I, UP, B`).
+- Formatting is black; linting and import sorting are ruff (`E, F, I, UP, B`).
 - Configuration is managed with Hydra/OmegaConf (`config/config.yaml`); avoid hard-coded parameters.
 - Logging: call `setup_logging()` from `src/utils/general_utils.py`, which loads `config/logging.yaml`. Use module-level `logging.getLogger(__name__)`, never `print`.
 - Secrets come from environment variables (see `src/.env.example`); never commit credentials — CI runs Gitleaks on full history.

@@ -40,9 +40,6 @@ jobs:
       - name: Run black format Checks
         run: black --check src tests
 
-      - name: run isort import order check
-        run: isort --check-only src tests
-
       - name: Run Ruff
         run: ruff check src tests
 

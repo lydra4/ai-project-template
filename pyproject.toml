@@ -9,9 +9,6 @@ target-version = "py313" # Depends on python version
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
-[tool.isort]
-profile = "black"
-
 [tool.mypy]
 python_version = "3.13" # Depends on python version
 explicit_package_bases = true
