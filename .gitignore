@@ -41,9 +41,6 @@
 **/.LSOverride
 **/.Trashes
 
-# VSCode config
-**/.vscode/
-
 # Vim
 *~
 .*.swo
