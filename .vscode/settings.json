@@ -15,5 +15,7 @@
             "source.fixAll.ruff": "explicit"
         }
     },
-    "ruff.importStrategy": "fromEnvironment"
+    "ruff.importStrategy": "fromEnvironment",
+    "mypy-type-checker.importStrategy": "fromEnvironment",
+    "mypy-type-checker.reportingScope": "workspace"
 }
