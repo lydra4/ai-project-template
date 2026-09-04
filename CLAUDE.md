@@ -18,13 +18,31 @@ Dockerfile name in `docker/`).
 - `scripts/` — docker and environment helper scripts.
 - `docker/template.Dockerfile` — multi-stage build (builder venv → slim runtime).
 - `dev-requirements.txt` / `prod-requirements.txt` — pinned dependencies. Dev = tooling only; runtime deps go in prod.
+- `.vscode/settings.json` — tracked on purpose; wires ruff as the editor formatter (see Editor setup).
 
 ## Setup
 
 ```bash
-pip install -r dev-requirements.txt -r prod-requirements.txt
-# or: conda env create -f env.yaml
+bash scripts/environment/setup_env.sh   # conda env from env.yaml + pre-commit install
+# or: pip install -r dev-requirements.txt -r prod-requirements.txt
 ```
+
+The conda env is named after `name:` in `env.yaml` (`temp` until renamed). After creating
+it, run **Python: Select Interpreter** in VS Code and pick that env — the ruff and mypy
+extensions resolve their binaries from the selected interpreter.
+
+## Editor setup
+
+`.vscode/settings.json` is committed so every clone formats identically:
+
+- `ruff` is the Python formatter, with `formatOnSave` plus `organizeImports`/`fixAll` code
+  actions on save. Without this, `ruff format` violations are invisible until pre-commit
+  rewrites the files and aborts the commit.
+- `ruff.importStrategy = "fromEnvironment"` forces the env's pinned ruff instead of the
+  extension's bundled copy; a version mismatch makes the editor and pre-commit disagree.
+- Settings are scoped to `[python]`, so notebooks are untouched (`nbstripout` handles those).
+
+Editor config is a convenience only — `pre-commit` and CI are the enforcement.
 
 ## Quality checks
 
@@ -49,8 +67,5 @@ pytest -q --cov=src --cov-report=term-missing
 
 ## CI/CD and automation
 
-- `ci-cd.yaml` — quality checks, Docker build + Trivy scan (push to ghcr.io on non-PR events), Gitleaks secret scan. The deploy job (Hugging Face Space) is currently commented out.
-- `claude.yaml` — interactive Claude agent, triggered by `@claude` mentions in issues/PR comments.
-- `claude-review.yaml` — automatic Claude review on every PR open/update.
-- `claude-ci-triage.yaml` — Claude diagnoses failures of the "AI Project CI/CD" workflow and comments the root cause.
-- All Claude workflows run on AWS Bedrock (ap-southeast-1) via OIDC; the role ARN is in the `AWS_ROLE_TO_ASSUME` secret.
+- `ci-cd.yaml` is the only workflow — quality checks, Docker build + Trivy scan (push to ghcr.io on non-PR events), Gitleaks secret scan. The deploy job (Hugging Face Space) is currently commented out.
+- `.github/dependabot.yaml` — weekly grouped dependency PRs.
