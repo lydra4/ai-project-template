@@ -18,7 +18,7 @@ Dockerfile name in `docker/`).
 - `scripts/` — docker and environment helper scripts.
 - `docker/template.Dockerfile` — multi-stage build (builder venv → slim runtime).
 - `dev-requirements.txt` / `prod-requirements.txt` — pinned dependencies. Dev = tooling only; runtime deps go in prod.
-- `.vscode/settings.json` — tracked on purpose; wires ruff as the editor formatter (see Editor setup).
+- `.vscode/settings.json` / `.vscode/extensions.json` — tracked on purpose (see Editor setup).
 
 ## Setup
 
@@ -33,28 +33,45 @@ extensions resolve their binaries from the selected interpreter.
 
 ## Editor setup
 
-`.vscode/settings.json` is committed so every clone formats identically:
+`.vscode/` is committed so every clone behaves identically. `settings.json` says how the
+tools behave; `extensions.json` lists the extensions those settings depend on — settings
+naming an uninstalled extension fail *silently*, so both files are required.
 
 - `ruff` is the Python formatter, with `formatOnSave` plus `organizeImports`/`fixAll` code
   actions on save. Without this, `ruff format` violations are invisible until pre-commit
   rewrites the files and aborts the commit.
-- `ruff.importStrategy = "fromEnvironment"` forces the env's pinned ruff instead of the
-  extension's bundled copy; a version mismatch makes the editor and pre-commit disagree.
-- Settings are scoped to `[python]`, so notebooks are untouched (`nbstripout` handles those).
+- `*.importStrategy = "fromEnvironment"` (ruff and mypy) forces the env's pinned binary
+  instead of the extension's bundled copy; a version mismatch makes the editor and
+  pre-commit disagree.
+- `mypy-type-checker` surfaces `disallow_untyped_defs` while typing. **Do not set
+  `mypy-type-checker.preferDaemon`** — in 2026.6.0 it routes into a code path that raises
+  `KeyError: 'daemonStatusFile'` on every lint, and since `showNotifications` defaults to
+  `off` the failure is completely silent: no squiggles, no error, errors only in the
+  Output → Mypy log.
+- `files.insertFinalNewline` + `files.trimFinalNewlines: false` mirror the
+  `end-of-file-fixer` hook. VS Code does not add a final newline on its own, so without
+  these every hand-edited file gets rewritten by pre-commit. (`files.trimTrailingWhitespace`
+  would likewise mirror the `trailing-whitespace` hook; not set yet.)
+- `check-json` skips `.vscode/` (`exclude: ^\.vscode/`) because both files are JSONC —
+  comments and trailing commas are legal there but rejected by Python's strict json parser.
+- Formatter settings are scoped to `[python]`, so notebooks are untouched (`nbstripout`
+  handles those). File-hygiene settings are global, matching the hooks.
 
 Editor config is a convenience only — `pre-commit` and CI are the enforcement.
 
 ## Quality checks
 
-CI (`.github/workflows/ci-cd.yaml`) runs these on every push/PR — run them locally before committing:
+`.pre-commit-config.yaml` is the single source of truth. CI runs the same hooks, so local
+and CI cannot disagree:
 
 ```bash
-ruff format --check src tests
-ruff check src tests
-mypy src
-bandit -r src/ -ll -ii
-pytest -q --cov=src --cov-report=term-missing
+pre-commit run --all-files                          # ruff, mypy, bandit, gitleaks, nbstripout, file hygiene
+pytest -q --cov=src --cov-report=term-missing       # not a hook; run separately
 ```
+
+Do not re-list individual tool commands in `ci-cd.yaml` — that split is what let a broken
+`mypy_path` pass CI while failing every local commit. Add or change checks in
+`.pre-commit-config.yaml` only.
 
 ## Conventions
 
@@ -67,5 +84,5 @@ pytest -q --cov=src --cov-report=term-missing
 
 ## CI/CD and automation
 
-- `ci-cd.yaml` is the only workflow — quality checks, Docker build + Trivy scan (push to ghcr.io on non-PR events), Gitleaks secret scan. The deploy job (Hugging Face Space) is currently commented out.
+- `ci-cd.yaml` is the only workflow — `pre-commit run --all-files` + pytest, Docker build + Trivy scan (push to ghcr.io on non-PR events), Gitleaks secret scan over full history. The deploy job (Hugging Face Space) is currently commented out.
 - `.github/dependabot.yaml` — weekly grouped dependency PRs.
