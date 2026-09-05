@@ -17,5 +17,7 @@
     },
     "ruff.importStrategy": "fromEnvironment",
     "mypy-type-checker.importStrategy": "fromEnvironment",
-    "mypy-type-checker.reportingScope": "workspace"
+    "mypy-type-checker.reportingScope": "workspace",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": false
 }
