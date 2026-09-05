@@ -37,17 +37,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r dev-requirements.txt -r prod-requirements.txt
 
-      - name: Run Ruff format check
-        run: ruff format --check src tests
+      - name: Cache pre-commit hooks
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Run Ruff
-        run: ruff check src tests
-
-      - name: Run mypy
-        run: mypy src
-
-      - name: Run Bandit (Code Security Scan)
-        run: bandit -r src/ -ll -ii
+      - name: Run pre-commit
+        run: pre-commit run --all-files
 
       - name: Run pytest
         run: pytest -q --cov=src --cov-report=term-missing --cov-report=xml
