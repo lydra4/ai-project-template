@@ -19,5 +19,8 @@
     "mypy-type-checker.importStrategy": "fromEnvironment",
     "mypy-type-checker.reportingScope": "workspace",
     "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": false
+    "files.trimFinalNewlines": false,
+    "[makefile]": {
+        "editor.insertSpaces": false
+    }
 }
