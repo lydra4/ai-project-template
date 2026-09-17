@@ -18,6 +18,7 @@
     "ruff.importStrategy": "fromEnvironment",
     "mypy-type-checker.importStrategy": "fromEnvironment",
     "mypy-type-checker.reportingScope": "workspace",
+    "files.eol": "\n",
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": false,
     "[makefile]": {
