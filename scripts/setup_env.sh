@@ -22,6 +22,9 @@ set +u
 conda activate "$ENV_NAME"
 set -u
 
+echo "🔌 Installing VS Code extensions..."
+bash "$(dirname "$0")/install_extensions.sh"
+
 echo "🛠️ Setting up pre-commit..."
 pre-commit install
 echo "✅ Pre-commit setup completed."
