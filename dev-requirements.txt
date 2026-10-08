@@ -1,10 +1,10 @@
 # Code Formatting and Linting
-ruff==0.16.8
+ruff==0.16.10
 types-PyYAML==6.0.12.20260906
 
 # Pre-commit Hooks
 pre-commit==4.6.2
-mypy==2.3.1
+mypy==2.4.0
 
 # Security
 bandit==1.9.4
