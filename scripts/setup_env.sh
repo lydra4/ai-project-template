@@ -6,13 +6,11 @@ set +u
 eval "$(conda shell.bash hook)"
 set -u
 
-if ! command -v mamba &> /dev/null; then
-    echo "⚡ Installing mamba into base environment..."
-    conda install -n base -c conda-forge mamba -y
-fi
+# Use Conda's libmamba solver (already configured on this system).
+export CONDA_SOLVER=libmamba
 
-echo "🚀 Creating environment from env.yaml using mamba..."
-mamba env create -f env.yaml -y
+echo "🚀 Creating environment from env.yaml using conda (libmamba)..."
+conda env create -f env.yaml -y
 echo "✅ Environment created."
 
 ENV_NAME=$(awk '/^name:/ {print $2}' env.yaml)
@@ -36,8 +34,7 @@ else
 fi
 
 echo "🧹 Cleaning conda & pip caches..."
-mamba clean -a -y
-conda clean --index-cache -y || true
+conda clean -a -y
 pip cache purge
 pre-commit clean
 echo "✨ Cleanup done."
