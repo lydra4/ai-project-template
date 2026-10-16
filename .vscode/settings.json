@@ -10,12 +10,14 @@
         "hydralance": true
     },
     "[python]": {
-        "editor.rulers": [88],
+        "editor.rulers": [
+            88
+        ],
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
-            "source.organizeImports.ruff": "explicit",
-            "source.fixAll.ruff": "explicit"
+            "source.organizeImports.ruff": "always",
+            "source.fixAll.ruff": "always"
         }
     },
     "ruff.importStrategy": "fromEnvironment",
@@ -23,7 +25,8 @@
     "mypy-type-checker.reportingScope": "workspace",
     "files.eol": "\n",
     "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": false,
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
     "[makefile]": {
         "editor.insertSpaces": false
     }
