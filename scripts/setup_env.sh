@@ -6,9 +6,6 @@ set +u
 eval "$(conda shell.bash hook)"
 set -u
 
-# Use Conda's libmamba solver (already configured on this system).
-export CONDA_SOLVER=libmamba
-
 echo "🚀 Creating environment from env.yaml using conda (libmamba)..."
 conda env create -f env.yaml -y
 echo "✅ Environment created."
@@ -21,7 +18,7 @@ conda activate "$ENV_NAME"
 set -u
 
 echo "🔌 Installing VS Code extensions..."
-bash "$(dirname "$0")/install_extensions.sh"
+bash "$(dirname "$0")/install_extensions.sh" || echo "⚠️  Extension install failed; continue and install them from the VS Code UI."
 
 echo "🛠️ Setting up pre-commit..."
 pre-commit install
