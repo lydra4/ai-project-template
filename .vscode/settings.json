@@ -1,4 +1,6 @@
-{
+{   
+    "python-envs.defaultEnvManager": "ms-python.python:conda",
+    "python-envs.defaultPackageManager": "ms-python.python:conda",
     "files.exclude": {
         "**/.git": false,
         "**/.svn": true,
@@ -8,6 +10,7 @@
         "hydralance": true
     },
     "[python]": {
+        "editor.rulers": [88],
         "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
