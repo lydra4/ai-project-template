@@ -87,7 +87,12 @@ Do not re-list individual tool commands in `ci-cd.yaml` — that split is what l
 - Configuration is managed with Hydra/OmegaConf (`config/config.yaml`); avoid hard-coded parameters.
 - Logging: call `setup_logging()` from `src/utils/general_utils.py`, which loads `config/logging.yaml`. Use module-level `logging.getLogger(__name__)`, never `print`.
 - Secrets come from environment variables (see `.env.example` at the repo root); never commit credentials — CI runs Gitleaks on full history.
-- Dependencies are pinned exactly (`==`); Dependabot updates them weekly in grouped PRs.
+- Direct dependencies are pinned exactly (`==`); Dependabot updates them weekly in grouped PRs.
+  Do not pin transitive dependencies (e.g. `omegaconf`, which comes with `hydra-core`) — let
+  the parent's constraint choose the version. Dependabot bumps each pin independently, so a
+  transitive pin can be bumped past the parent's range (`omegaconf==2.4.0` vs `hydra-core`'s
+  `<2.4`) and break install. If `src/` starts importing one directly, pin it again and add a
+  Dependabot `ignore` rule matching the parent's range.
 
 ## CI/CD and automation
 
