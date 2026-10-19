@@ -9,6 +9,9 @@ target-version = "py313" # Depends on python version
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "PLC0415"]
 
+[tool.ruff.lint.pycodestyle]
+max-line-length = 120
+
 [tool.mypy]
 python_version = "3.13" # Depends on python version
 explicit_package_bases = true
