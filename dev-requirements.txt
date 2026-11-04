@@ -1,14 +1,14 @@
 # Code Formatting and Linting
-ruff==0.17.2
-types-PyYAML==6.0.12.20260906
+ruff==0.17.3
+types-PyYAML==6.0.12.20261030
 
 # Pre-commit Hooks
 pre-commit==4.7.0
-mypy==2.4.0
+mypy==2.4.1
 
 # Security
 bandit==1.9.4
 
 # Unit Test
-pytest==9.1.1
+pytest==9.2.0
 pytest-cov==7.1.0
